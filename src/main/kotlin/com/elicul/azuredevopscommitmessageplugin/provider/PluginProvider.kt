@@ -10,12 +10,13 @@ import git4idea.GitUtil
 class PluginProvider : CommitMessageProvider {
 
     override fun getCommitMessage(forChangelist: LocalChangeList, project: Project): String? {
-        val comment: String? = forChangelist.comment
+        val repositoryManager = GitUtil.getRepositoryManager(project)
+        val repository = repositoryManager.repositories.firstOrNull() ?: return null
         val commitMessageService = project.service<CommitMessageService>()
 
-        val repositoryManager = GitUtil.getRepositoryManager(project)
-        val branch = repositoryManager.repositories[0].currentBranch
-
-        return commitMessageService.applyBranchNameToCommitMessage(branch?.name, comment)
+        return commitMessageService.applyBranchNameToCommitMessage(
+            repository.currentBranch?.name,
+            forChangelist.comment
+        )
     }
 }

@@ -19,7 +19,8 @@ class PluginAction : AnAction() {
             val plugin = currentProject.service<CommitMessageService>()
 
             val repositoryManager = GitUtil.getRepositoryManager(currentProject)
-            val branch = repositoryManager.repositories[0].currentBranch
+            val repository = repositoryManager.repositories.firstOrNull() ?: return
+            val branch = repository.currentBranch
 
             val commitPanel = getCommitPanel(actionEvent)
             val newCommitMessage = plugin.applyBranchNameToCommitMessage(branch?.name, getCurrentCommitMessage(actionEvent))
